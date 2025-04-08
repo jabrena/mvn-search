@@ -25,6 +25,6 @@ java -jar target/mvn-search-0.1.0-SNAPSHOT-jar-with-dependencies.jar "g:org.slf4
 java -jar target/mvn-search-0.1.0-SNAPSHOT-jar-with-dependencies.jar "junit" -f gradle
 ```
 
-## References
+## References
 
 - https://github.com/erosb/mvn-search
