@@ -32,4 +32,5 @@ java -jar target/mvn-search-0.1.0-SNAPSHOT-jar-with-dependencies.jar "junit" -f 
 
 ## References
 
+- https://central.sonatype.org/search/rest-api-guide/
 - https://github.com/erosb/mvn-search
