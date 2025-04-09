@@ -2,6 +2,11 @@ package info.jab.cli;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import info.jab.service.MavenCentralRepository;
+import info.jab.service.MavenSearchService;
+
+import info.jab.service.Dependency;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -38,6 +43,7 @@ public class MavenSearchCLI implements Runnable {
         defaultValue = "false")
     private boolean showVersions;
 
+    //TODO: Remove this option in the future with better testing
     @Option(
         names = {"--non-interactive"},
         description = "Run in non-interactive mode (for testing)",
@@ -59,22 +65,18 @@ public class MavenSearchCLI implements Runnable {
     @Override
     public void run() {
         if (!searchTerm.trim().isEmpty()) {
-            startSearch(searchTerm);
+            try {
+                lastSearchResults = searchService.search(searchTerm);
+                if (!lastSearchResults.isEmpty()) {
+                    displayResults();
+                } else {
+                    System.out.println("No results found");
+                }
+            } catch (Exception e) {
+                logger.error("Error starting search", e);
+            }
         } else {
             System.out.println("No search term provided");
-        }
-    }
-    
-    private void startSearch(String searchTerm) {
-        try {
-            lastSearchResults = searchService.search(searchTerm);
-            if (!lastSearchResults.isEmpty()) {
-                displayResults();
-            } else {
-                System.out.println("No results found");
-            }
-        } catch (Exception e) {
-            logger.error("Error starting search", e);
         }
     }
     

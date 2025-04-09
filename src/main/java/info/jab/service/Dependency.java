@@ -1,4 +1,4 @@
-package info.jab.cli;
+package info.jab.service;
 
 import java.util.List;
 

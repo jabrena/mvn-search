@@ -1,0 +1,177 @@
+openapi: 3.0.3
+info:
+  title: Maven Central Repository Search API
+  description: |
+    API for searching artifacts in the Maven Central Repository.
+    This API uses Apache Solr to provide search functionality.
+  version: "1.0"
+  contact:
+    name: Maven Central Repository
+    url: https://search.maven.org
+servers:
+  - url: https://search.maven.org/solrsearch
+    description: Maven Central Repository Search Service
+paths:
+  /select:
+    get:
+      summary: Search for artifacts
+      description: |
+        Search for artifacts in the Maven Central Repository using various query parameters.
+        The search is powered by Apache Solr.
+      parameters:
+        - name: q
+          in: query
+          description: |
+            The search query. Can be simple text or use Solr query syntax.
+            Examples:
+            - `g:"org.springframework"` (search by groupId)
+            - `a:"spring-boot"` (search by artifactId)
+            - `v:"2.5.0"` (search by version)
+            - `l:"javadoc"` (search by classifier)
+            - `p:"jar"` (search by packaging)
+            - `fc:"org.springframework"` (search by fully-qualified classname)
+          required: true
+          schema:
+            type: string
+        - name: core
+          in: query
+          description: |
+            The core to search against. Possible values:
+            - "gav" (default, search artifacts)
+            - "rdf" (search classes/packages)
+          schema:
+            type: string
+            enum: [gav, rdf]
+            default: gav
+        - name: rows
+          in: query
+          description: Number of results to return
+          schema:
+            type: integer
+            default: 20
+        - name: start
+          in: query
+          description: Starting index for pagination
+          schema:
+            type: integer
+            default: 0
+        - name: wt
+          in: query
+          description: Response format
+          schema:
+            type: string
+            enum: [json, xml]
+            default: json
+      responses:
+        '200':
+          description: Successful search
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  responseHeader:
+                    type: object
+                    properties:
+                      status:
+                        type: integer
+                      QTime:
+                        type: integer
+                      params:
+                        type: object
+                  response:
+                    type: object
+                    properties:
+                      numFound:
+                        type: integer
+                      start:
+                        type: integer
+                      docs:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            g:
+                              type: string
+                              description: groupId
+                            a:
+                              type: string
+                              description: artifactId
+                            v:
+                              type: string
+                              description: version
+                            p:
+                              type: string
+                              description: packaging
+                            timestamp:
+                              type: integer
+                              format: int64
+                            ec:
+                              type: array
+                              items:
+                                type: string
+                              description: extended classifications
+                            tags:
+                              type: array
+                              items:
+                                type: string
+            application/xml:
+              schema:
+                type: object
+  /suggest:
+    get:
+      summary: Get search suggestions
+      description: Provides autocompletion suggestions based on partial search terms
+      parameters:
+        - name: q
+          in: query
+          description: Partial search term
+          required: true
+          schema:
+            type: string
+        - name: wt
+          in: query
+          description: Response format
+          schema:
+            type: string
+            enum: [json, xml]
+            default: json
+      responses:
+        '200':
+          description: Successful suggestion response
+          content:
+            application/json:
+              schema:
+                type: object
+  /browse:
+    get:
+      summary: Browse artifacts for a specific group or artifact
+      description: |
+        Returns available versions for a specific groupId or artifactId.
+      parameters:
+        - name: g
+          in: query
+          description: Group ID
+          schema:
+            type: string
+        - name: a
+          in: query
+          description: Artifact ID
+          schema:
+            type: string
+        - name: wt
+          in: query
+          description: Response format
+          schema:
+            type: string
+            enum: [json, xml]
+            default: json
+      responses:
+        '200':
+          description: Successful browse response
+          content:
+            application/json:
+              schema:
+                type: object

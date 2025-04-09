@@ -17,14 +17,20 @@ A command-line tool to search for dependencies in Maven Central and generate dep
 ## Building
 
 ```bash
+./mvnw clean verify
 ./mvnw clean package
 
 java -jar target/mvn-search-0.1.0-SNAPSHOT-jar-with-dependencies.jar "spring-boot-starter-parent"
 java -jar target/mvn-search-0.1.0-SNAPSHOT-jar-with-dependencies.jar "hibernate-validator"
 java -jar target/mvn-search-0.1.0-SNAPSHOT-jar-with-dependencies.jar "g:org.slf4j"
 java -jar target/mvn-search-0.1.0-SNAPSHOT-jar-with-dependencies.jar "junit" -f gradle
+
+./mvnw versions:display-dependency-updates
+./mvnw versions:display-plugin-updates
+./mvnw versions:display-property-updates
 ```
 
 ## References
 
+- https://central.sonatype.org/search/rest-api-guide/
 - https://github.com/erosb/mvn-search
