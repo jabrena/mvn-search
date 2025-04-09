@@ -1,7 +1,9 @@
-package info.jab.cli;
+package info.jab.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import info.jab.cli.DependencyFormat;
 
 import java.util.ArrayList;
 import java.util.List;
